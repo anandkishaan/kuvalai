@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="ta">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Select Sprayer</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <style>
+        .image-grid {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .item-image {
+            border: 2px solid #ccc;
+            border-radius: 10px;
+            padding: 10px;
+            cursor: pointer;
+            width: 150px;
+            text-align: center;
+            background: #f0f0f0;
+        }
+
+        .item-image img {
+            width: 100px;
+            height: 100px;
+            object-fit: contain;
+        }
+
+        .item-image:hover {
+            background: #fff4e6;
+            border-color: #ff9900;
+        }
+    </style>
+    <script>
+        function selectSprayer(value) {
+            document.getElementById('sprayerSelect').value = value;
+            document.getElementById('sprayerForm').submit();
+        }
+    </script>
+</head>
+
+<body>
+    <div class="container">
+        <h2>பீய்ச்சும் கருவி தேர்வு செய்யவும்</h2>
+        <form id="sprayerForm" action="/sprayer" method="post">
+            <input type="hidden" name="crop" value="{{ crop }}">
+            <input type="hidden" name="chemical" value="{{ chemical }}">
+            <select id="sprayerSelect" name="sprayer" required>
+                <option value="">-- பீய்ச்சும் கருவி --</option>
+                {% for sprayer in sprayers %}
+                <option value="{{ sprayer.name_en }}">{{ sprayer.name_en }} ({{ sprayer.name_ta }})</option>
+                {% endfor %}
+            </select>
+            <button type="submit">முடிவை காண்க</button>
+        </form>
+
+        <div class="image-grid">
+            {% for sprayer in sprayers %}
+            <div class="item-image" onclick="selectSprayer('{{ sprayer.name_en }}')">
+                <img src="{{ url_for('static', filename='images/' ~ sprayer.image) }}" alt="{{ sprayer.name_en }}">
+                <p>{{ sprayer.name_en }}<br>{{ sprayer.name_ta }}</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</body>
+
+</html>

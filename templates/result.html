@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Result (முடிவு)</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <style>
+        .image-box {
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        .image-box img {
+            width: 250px;
+            border-radius: 8px;
+            border: 2px solid #aaa;
+        }
+
+        .guide-text {
+            margin-top: 15px;
+            font-size: 18px;
+            color: #056608;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container center">
+        <h2>Dosage Guide (பயன்பாட்டு வழிகாட்டி)</h2>
+        <p><strong>Crop (பயிர்):</strong> {{ crop }}</p>
+        <p><strong>Chemical (வேதி மருந்து):</strong> {{ chemical }}</p>
+        <p><strong>Sprayer (பீய்ச்சும் கருவி):</strong> {{ sprayer }}</p>
+
+        <div class="image-box">
+            <img src="{{ url_for('static', filename='images/' + image) }}" alt="Cup Measurement">
+            <div class="guide-text">
+                Fill until first 2 lines<br>
+                முதல் 2 கோடுகள் வரை நிரப்பவும்
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

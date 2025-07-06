@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="ta">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Kuvalai Admin Panel</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <style>
+        body {
+            font-family: 'Noto Sans Tamil', sans-serif;
+            background: #f0fff4;
+            padding: 30px;
+        }
+
+        h2 {
+            color: #27ae60;
+            border-bottom: 2px solid #27ae60;
+            padding-bottom: 5px;
+        }
+
+        form {
+            margin-bottom: 40px;
+            background: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 5px #ccc;
+        }
+
+        input,
+        select {
+            padding: 10px;
+            margin: 10px 0;
+            width: 100%;
+            font-size: 16px;
+        }
+
+        button {
+            background-color: #2ecc71;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 18px;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #27ae60;
+        }
+
+        .preview img {
+            height: 50px;
+            margin-right: 10px;
+            vertical-align: middle;
+        }
+
+        .inline-form {
+            display: inline-block;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h2>🖼️ Upload Image</h2>
+    <form action="/upload" method="post" enctype="multipart/form-data">
+        <input type="file" name="image" required>
+        <button type="submit">Upload</button>
+    </form>
+
+    <h2>🌾 Add Crop</h2>
+    <form action="/add_crop" method="post">
+        <input type="text" name="name_en" placeholder="Crop Name (English)" required>
+        <input type="text" name="name_ta" placeholder="பயிர் பெயர் (Tamil)" required>
+        <input type="text" name="image" placeholder="Image Filename (e.g. rice.png)" required>
+        <button type="submit">Add Crop</button>
+    </form>
+
+    <h2>🧪 Add Chemical</h2>
+    <form action="/add_chemical" method="post">
+        <input type="text" name="name_en" placeholder="Chemical Name (English)" required>
+        <input type="text" name="name_ta" placeholder="வேதி மருந்து பெயர் (Tamil)" required>
+        <input type="text" name="image" placeholder="Image Filename (e.g. admire.png)" required>
+        <button type="submit">Add Chemical</button>
+    </form>
+
+    <h2>💦 Add Sprayer</h2>
+    <form action="/add_sprayer" method="post">
+        <input type="text" name="name_en" placeholder="Sprayer Name (English)" required>
+        <input type="text" name="name_ta" placeholder="ஸ்பிரேயர் பெயர் (Tamil)" required>
+        <input type="text" name="image" placeholder="Image Filename (e.g. knapsack20.png)" required>
+        <button type="submit">Add Sprayer</button>
+    </form>
+
+    <h2>📏 Add Dosage Guide</h2>
+    <form action="/add_guide" method="post">
+        <select name="chemical_id" required>
+            <option value="">Select Chemical</option>
+            {% for chemical in chemicals %}
+            <option value="{{ chemical.id }}">{{ chemical.name_en }} ({{ chemical.name_ta }})</option>
+            {% endfor %}
+        </select>
+
+        <select name="sprayer_id" required>
+            <option value="">Select Sprayer</option>
+            {% for sprayer in sprayers %}
+            <option value="{{ sprayer.id }}">{{ sprayer.name_en }} ({{ sprayer.name_ta }})</option>
+            {% endfor %}
+        </select>
+
+        <input type="text" name="image" placeholder="Dosage Image Filename (e.g. cup500.png)" required>
+        <input type="text" name="guide_en" placeholder="Guide Text (English)" required>
+        <input type="text" name="guide_ta" placeholder="வழிகாட்டி உரை (Tamil)" required>
+        <button type="submit">Add Guide</button>
+    </form>
+
+    <h2>📋 Existing Items</h2>
+
+    <h3>Crops</h3>
+    <ul>
+        {% for item in crops %}
+        <li class="preview">
+            <img src="{{ url_for('static', filename='images/' ~ item.image) }}">
+            {{ item.name_en }} ({{ item.name_ta }})
+            <form action="/delete/crop/{{ item.id }}" method="post" class="inline-form">
+                <button type="submit">Delete</button>
+            </form>
+        </li>
+        {% endfor %}
+    </ul>
+
+    <h3>Chemicals</h3>
+    <ul>
+        {% for item in chemicals %}
+        <li class="preview">
+            <img src="{{ url_for('static', filename='images/' ~ item.image) }}">
+            {{ item.name_en }} ({{ item.name_ta }})
+            <form action="/delete/chemical/{{ item.id }}" method="post" class="inline-form">
+                <button type="submit">Delete</button>
+            </form>
+        </li>
+        {% endfor %}
+    </ul>
+
+    <h3>Sprayers</h3>
+    <ul>
+        {% for item in sprayers %}
+        <li class="preview">
+            <img src="{{ url_for('static', filename='images/' ~ item.image) }}">
+            {{ item.name_en }} ({{ item.name_ta }})
+            <form action="/delete/sprayer/{{ item.id }}" method="post" class="inline-form">
+                <button type="submit">Delete</button>
+            </form>
+        </li>
+        {% endfor %}
+    </ul>
+
+    <h3>Dosage Guides</h3>
+    <ul>
+        {% for guide in guides %}
+        <li class="preview">
+            <img src="{{ url_for('static', filename='images/' ~ guide.image) }}">
+            ChemID: {{ guide.chemical_id }} | SprayID: {{ guide.sprayer_id }}
+            <form action="/delete/guide/{{ guide.id }}" method="post" class="inline-form">
+                <button type="submit">Delete</button>
+            </form>
+        </li>
+        {% endfor %}
+    </ul>
+
+</body>
+
+</html>
